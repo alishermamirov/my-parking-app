@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_parking_app/logic/parking_area_bloc/parking_area_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
 import 'package:my_parking_app/presentation/screens/navigation_screen.dart';
 
@@ -18,8 +19,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ParkingBloc()..add(GetParkingEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ParkingBloc>(
+          create: (context) => ParkingBloc()..add(GetParkingEvent()),
+        ),
+        BlocProvider<ParkingAreaBloc>(create: (context) => ParkingAreaBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Parking App',

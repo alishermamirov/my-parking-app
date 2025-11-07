@@ -10,22 +10,37 @@ class ParkingAreaModel {
     required this.parkingId,
     required this.slots,
   });
-
   factory ParkingAreaModel.fromJson(Map<String, dynamic> json) {
     final slotsData = json['slots'] as List<dynamic>? ?? [];
     final slots = slotsData.map((slot) {
-      final slotMap = slot as Map<String, dynamic>;
-      return ParkingSlotModel(
-        id: slotMap['id'] as String,
-        name: slotMap['name'] as String,
-        isOccupied: slotMap['isOccupied'] as bool? ?? false,
-      );
+      final slotMap = Map<String, dynamic>.from(slot as Map);
+      return ParkingSlotModel.fromJson(slotMap);
     }).toList();
 
     return ParkingAreaModel(
-      id: json['id'] as String,
-      parkingId: json['parkingId'] as String,
+      id: json['id']?.toString() ?? '',
+      parkingId: json['parkingId']?.toString() ?? '',
       slots: slots,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'parkingId': parkingId,
+      'slots': slots.map((slot) => slot.toJson()).toList(),
+    };
+  }
+
+  ParkingAreaModel copyWith({
+    String? id,
+    String? parkingId,
+    List<ParkingSlotModel>? slots,
+  }) {
+    return ParkingAreaModel(
+      id: id ?? this.id,
+      parkingId: parkingId ?? this.parkingId,
+      slots: slots ?? this.slots,
     );
   }
 }
