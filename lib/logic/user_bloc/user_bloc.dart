@@ -18,13 +18,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUserDataEvent>(_updateUserData);
     on<DeleteUserEvent>(_deleteUserData);
   }
+  String userId = '';
+
   Future<void> _onGetUserEvent(
     GetUserEvent event,
     Emitter<UserState> emit,
   ) async {
     emit(UserLoading());
     try {
-      final user = await userService.getUserData(event.userId);
+      final user = await userService.getUserData(userId);
+      // await Future.delayed(Duration(seconds: 1));
       if (user != null) {
         emit(UserLoaded(user: user));
       } else {

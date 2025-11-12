@@ -44,6 +44,8 @@ dependencies:
   toastification: ^3.0.3
   action_slider: ^0.7.0
   firebase_auth: ^6.1.2
+  skeletonizer: ^2.1.0+1
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

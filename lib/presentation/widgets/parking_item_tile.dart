@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:my_parking_app/presentation/screens/parking_slots_screen.dart';
 
@@ -8,25 +9,27 @@ class ParkingItemTile extends StatelessWidget {
   final bool isMap;
   final double maxHeight;
   final bool? isSelected;
-  final ParkingModel data;
+  final ParkingModel? data;
   ParkingItemTile({
     Key? key,
     required this.maxHeight,
     // this.spot,
     this.isMap = false,
     this.isSelected,
-    required this.data,
+    this.data,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ParkingSlotsScreen(parkingId: data.id),
-          ),
-        );
+        data != null
+            ? Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ParkingSlotsScreen(parkingId: data!.id),
+                ),
+              )
+            : null;
       },
       child: Container(
         height: maxHeight,
@@ -54,7 +57,16 @@ class ParkingItemTile extends StatelessWidget {
                 ),
                 // width: maxHeight * 0.9,
                 height: maxHeight / 2,
-                child: Image.network(data.image, fit: BoxFit.cover),
+                child: data != null
+                    ? CachedNetworkImage(
+                        imageUrl: data!.image,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => SizedBox(),
+                      )
+                    : Image.asset(
+                        "assets/images/loading-icon-smartphone-screen-technology-device.jpg",
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             Padding(
@@ -68,14 +80,14 @@ class ParkingItemTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        data.name,
+                        data != null ? data!.name : "No name",
                         style: TextStyle(
                           fontSize: maxHeight / 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        "Joylashuv",
+                        data != null ? "Joylashuv" : "Loading...",
                         style: TextStyle(
                           fontSize: maxHeight / 18,
                           fontWeight: FontWeight.w500,

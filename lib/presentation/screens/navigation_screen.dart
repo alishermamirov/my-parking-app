@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
 import 'package:my_parking_app/presentation/screens/booking_slots_screen.dart';
+import 'package:my_parking_app/presentation/screens/favorites_screen.dart';
 import 'package:my_parking_app/presentation/screens/home_screen.dart';
 import 'package:my_parking_app/presentation/screens/profile_screen.dart';
 
@@ -17,7 +20,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   final _pages = const [
     HomeScreen(),
-    HomeScreen(),
+    FavoritesScreen(),
     BookingSlotsScreen(),
     ProfileScreen(),
   ];
@@ -25,6 +28,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Future.delayed(Duration.zero, () {
+      BlocProvider.of<ParkingBloc>(context).add(GetParkingEvent());
+    });
+
     print("booking slots screen");
   }
 

@@ -10,11 +10,11 @@ part 'parking_event.dart';
 
 class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
   final FirebaseDatabase database = FirebaseDatabase.instance;
-  StreamSubscription? _parkingSubscription;
+  // StreamSubscription? _parkingSubscription;
 
   ParkingBloc() : super(ParkingInitial()) {
     on<GetParkingEvent>(_onGetParking);
-    on<ParkingUpdatedEvent>(_onParkingUpdated);
+    // on<ParkingUpdatedEvent>(_onParkingUpdated);
   }
 
   Future<void> _onGetParking(
@@ -23,10 +23,8 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
   ) async {
     emit(ParkingLoading());
 
-    await _parkingSubscription?.cancel();
-
-    _parkingSubscription = database.ref('parkings').onValue.listen((dbEvent) {
-      final snapshot = dbEvent.snapshot;
+    try {
+      final snapshot = await database.ref('parkings').get();
 
       if (snapshot.exists && snapshot.value != null) {
         final Map<dynamic, dynamic> rawData =
@@ -38,25 +36,55 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
           return ParkingModel.fromJson(value).copyWith(id: key);
         }).toList();
 
-        add(ParkingUpdatedEvent(parkings));
+        emit(ParkingDone(parkings: parkings));
       } else {
-        add(const ParkingUpdatedEvent([]));
+        emit(ParkingDone(parkings: []));
       }
-    }, onError: (error) {
-      add(ParkingErrorEvent(error.toString()));
-    });
+    } catch (error) {
+      emit(ParkingError(message: error.toString()));
+    }
   }
 
-  void _onParkingUpdated(
-    ParkingUpdatedEvent event,
-    Emitter<ParkingState> emit,
-  ) {
-    emit(ParkingDone(parkings: event.parkings));
-  }
+  // Future<void> _onGetParking(
+  //   GetParkingEvent event,
+  //   Emitter<ParkingState> emit,
+  // ) async {
+  //   emit(ParkingLoading());
 
-  @override
-  Future<void> close() {
-    _parkingSubscription?.cancel();
-    return super.close();
-  }
+  //   // await _parkingSubscription?.cancel();
+
+  //   _parkingSubscription = database.ref('parkings').onValue.listen((dbEvent) {
+  //     final snapshot = dbEvent.snapshot;
+
+  //     if (snapshot.exists && snapshot.value != null) {
+  //       final Map<dynamic, dynamic> rawData =
+  //           snapshot.value as Map<dynamic, dynamic>;
+
+  //       final List<ParkingModel> parkings = rawData.entries.map((entry) {
+  //         final key = entry.key.toString();
+  //         final value = Map<String, dynamic>.from(entry.value);
+  //         return ParkingModel.fromJson(value).copyWith(id: key);
+  //       }).toList();
+
+  //       add(ParkingUpdatedEvent(parkings));
+  //     } else {
+  //       add(const ParkingUpdatedEvent([]));
+  //     }
+  //   }, onError: (error) {
+  //     add(ParkingErrorEvent(error.toString()));
+  //   });
+  // }
+
+  // void _onParkingUpdated(
+  //   ParkingUpdatedEvent event,
+  //   Emitter<ParkingState> emit,
+  // ) {
+  //   emit(ParkingDone(parkings: event.parkings));
+  // }
+
+  // @override
+  // Future<void> close() {
+  //   _parkingSubscription?.cancel();
+  //   return super.close();
+  // }
 }

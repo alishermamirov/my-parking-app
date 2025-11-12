@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_parking_app/logic/auth_bloc/auth_bloc.dart';
-import 'package:my_parking_app/logic/bloc/user_bloc.dart';
+import 'package:my_parking_app/logic/user_bloc/user_bloc.dart';
 import 'package:my_parking_app/logic/parking_area_bloc/parking_area_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
 import 'package:my_parking_app/logic/parking_booking_bloc/parking_booking_bloc.dart';
@@ -35,9 +35,7 @@ class MyApp extends StatelessWidget {
                 ..add(AppStarted()),
         ),
         BlocProvider<UserBloc>(create: (context) => UserBloc(UserService())),
-        BlocProvider<ParkingBloc>(
-          create: (context) => ParkingBloc()..add(GetParkingEvent()),
-        ),
+        BlocProvider<ParkingBloc>(create: (context) => ParkingBloc()),
         BlocProvider<ParkingAreaBloc>(create: (context) => ParkingAreaBloc()),
         BlocProvider<ParkingBookingBloc>(
           create: (context) => ParkingBookingBloc(),
