@@ -1,9 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_parking_app/logic/auth_bloc/auth_bloc.dart';
+import 'package:my_parking_app/logic/bloc/user_bloc.dart';
 import 'package:my_parking_app/logic/parking_area_bloc/parking_area_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
+import 'package:my_parking_app/logic/parking_booking_bloc/parking_booking_bloc.dart';
+import 'package:my_parking_app/presentation/screens/auth_screen.dart';
 import 'package:my_parking_app/presentation/screens/navigation_screen.dart';
+
+import 'package:my_parking_app/services/auth_service.dart';
+import 'package:my_parking_app/services/user_service.dart';
+import 'package:my_parking_app/utils/toast_utils.dart';
 
 import 'firebase_options.dart';
 import 'theme/app_theme.dart';
@@ -21,15 +29,41 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) =>
+              AuthBloc(authService: AuthService(), userService: UserService())
+                ..add(AppStarted()),
+        ),
+        BlocProvider<UserBloc>(create: (context) => UserBloc(UserService())),
         BlocProvider<ParkingBloc>(
           create: (context) => ParkingBloc()..add(GetParkingEvent()),
         ),
         BlocProvider<ParkingAreaBloc>(create: (context) => ParkingAreaBloc()),
+        BlocProvider<ParkingBookingBloc>(
+          create: (context) => ParkingBookingBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Parking App',
-        home: NavigationScreen(),
+        home: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthError) {
+              ToastUtils.showError(context, state.message);
+            } else if (state is AuthAuthenticated) {
+              print("User authenticated: ${state.userId}");
+              context.read<UserBloc>().add(GetUserEvent(userId: state.userId));
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthAuthenticated) {
+              return NavigationScreen();
+            } else {
+              return AuthScreen();
+            }
+          },
+        ),
+
         theme: AppTheme.theme,
         // routes: {
         //   RootScreen.routeName: (context) => const RootScreen(),

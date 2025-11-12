@@ -2,7 +2,11 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_parking_app/logic/parking_area_bloc/parking_area_bloc.dart';
+import 'package:my_parking_app/logic/parking_booking_bloc/parking_booking_bloc.dart';
+import 'package:my_parking_app/models/booking_model.dart';
 import 'package:my_parking_app/models/parking_slot_model.dart';
+import 'package:my_parking_app/presentation/screens/booking_slots_screen.dart';
+import 'package:my_parking_app/utils/toast_utils.dart';
 
 class ParkingSlotsScreen extends StatefulWidget {
   final String parkingId;
@@ -80,9 +84,7 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
                         child: bookingContainerItem(slot.name, "Parking place"),
                       ),
                       SizedBox(width: 20),
-                      Expanded(
-                        child: bookingContainerItem("selectedGarage", "Floor"),
-                      ),
+                      Expanded(child: bookingContainerItem("nimadir", "Floor")),
                     ],
                   ),
                   SizedBox(height: 50),
@@ -109,39 +111,78 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
                       ),
                       SizedBox(width: 16),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Provider.of<ParkingProvider>(
-                            //   context,
-                            //   listen: false,
-                            // ).slotBooking(
-                            //   widget.parkingId,
-                            //   // slot.id,
-                            //   1,
-                            //   selectedGarage,
-                            //   true,
-                            // );
-                          },
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
+                        child:
+                            BlocConsumer<
+                              ParkingBookingBloc,
+                              ParkingBookingState
+                            >(
+                              listener: (context, state) {
+                                if (state is ParkingBookingSuccess) {
+                                  ToastUtils.showSuccess(
+                                    context,
+                                    state.message,
+                                  );
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BookingSlotsScreen(),
+                                    ),
+                                  );
+                                }
+                                if (state is ParkingBookingError) {
+                                  ToastUtils.showError(context, state.message);
+                                }
+                              },
+                              builder: (context, state) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Provider.of<ParkingProvider>(
+                                    //   context,
+                                    //   listen: false,
+                                    // ).slotBooking(
+                                    //   widget.parkingId,
+                                    //   // slot.id,
+                                    //   1,
+                                    //   selectedGarage,
+                                    //   true,
+                                    // );
+
+                                    context.read<ParkingBookingBloc>().add(
+                                      ParkingSlotBookingEvent(
+                                        booking: BookingModel(
+                                          id: "UniqueKey",
+                                          userId: "userId",
+                                          parkingId: widget.parkingId,
+                                          areaId: widget.parkingId,
+                                          slotId: slot.id,
+                                          timestamp: -1,
+                                          index: 0,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(20),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(10),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Book",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            padding: EdgeInsets.all(10),
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Book",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                     ],
                   ),

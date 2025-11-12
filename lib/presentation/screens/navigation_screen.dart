@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_parking_app/presentation/screens/booking_slots_screen.dart';
 import 'package:my_parking_app/presentation/screens/home_screen.dart';
+import 'package:my_parking_app/presentation/screens/profile_screen.dart';
 
 import '../../theme/app_theme.dart';
 
@@ -16,10 +18,15 @@ class _NavigationScreenState extends State<NavigationScreen> {
   final _pages = const [
     HomeScreen(),
     HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
-  
+    BookingSlotsScreen(),
+    ProfileScreen(),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("booking slots screen");
+  }
 
   @override
   Widget build(BuildContext context) {

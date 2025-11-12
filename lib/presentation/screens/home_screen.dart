@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_parking_app/logic/bloc/user_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_state.dart';
 import 'package:my_parking_app/presentation/widgets/parking_item_tile.dart';
+
+import '../widgets/header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,33 +16,14 @@ class HomeScreen extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              const CircleAvatar(
-                radius: 22,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Colors.black54),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Alisher',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.all(10),
-                child: const Icon(Icons.notifications_none),
-              ),
-            ],
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is UserLoaded) {
+                return Header(title: "Welcome, ${state.user.userName}");
+              } else {
+                return Header(title: "Welcome");
+              }
+            },
           ),
         ),
         SizedBox(height: 16),
@@ -107,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                       final parkingData = list;
                       print(parkingData[0].id);
                       ;
-                      return ListView.builder(
+                      return ListView.separated(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
@@ -115,7 +99,9 @@ class HomeScreen extends StatelessWidget {
                             ? 4
                             : parkingData.length,
                         padding: EdgeInsets.all(10),
-
+                        separatorBuilder: (context, index) {
+                          return SizedBox(height: 10);
+                        },
                         itemBuilder: (context, index) {
                           final data = parkingData[index];
                           return ParkingItemTile(maxHeight: 260, data: data);
