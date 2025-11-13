@@ -26,7 +26,7 @@ class ParkingItemTile extends StatelessWidget {
         data != null
             ? Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ParkingSlotsScreen(parkingId: data!.id),
+                  builder: (context) => ParkingSlotsScreen(parking: data!),
                 ),
               )
             : null;

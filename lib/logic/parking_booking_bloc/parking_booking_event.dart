@@ -7,23 +7,20 @@ sealed class ParkingBookingEvent extends Equatable {
   List<Object> get props => [];
 }
 
+
+
 final class ParkingSlotBookingEvent extends ParkingBookingEvent {
   final BookingModel booking;
-  const ParkingSlotBookingEvent({
-    required this.booking,
-  });
+  const ParkingSlotBookingEvent({required this.booking});
   @override
   List<Object> get props => [booking];
 }
 
 class CancelSlotEvent extends ParkingBookingEvent {
-    final BookingModel booking;
+  final BookingModel booking;
 
-
-  const CancelSlotEvent({
-    required this.booking,
-  });
+  const CancelSlotEvent({required this.booking});
 
   @override
-  List<Object> get props=> [booking];
+  List<Object> get props => [booking];
 }

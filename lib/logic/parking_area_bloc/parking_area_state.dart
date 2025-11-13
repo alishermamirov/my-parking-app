@@ -12,11 +12,11 @@ class ParkingAreaInitial extends ParkingAreaState {}
 class ParkingAreaLoading extends ParkingAreaState {}
 
 class ParkingAreaLoaded extends ParkingAreaState {
-  final List<ParkingAreaModel> areas;
-  const ParkingAreaLoaded({required this.areas});
+  final ParkingAreaModel area;
+  const ParkingAreaLoaded({required this.area});
 
   @override
-  List<Object?> get props => [areas];
+  List<Object?> get props => [area];
 }
 
 class ParkingAreaError extends ParkingAreaState {

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_parking_app/logic/auth_bloc/auth_bloc.dart';
+import 'package:my_parking_app/logic/get_booking_slot_bloc/get_booking_slot_bloc.dart';
 import 'package:my_parking_app/logic/user_bloc/user_bloc.dart';
 import 'package:my_parking_app/logic/parking_area_bloc/parking_area_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:my_parking_app/presentation/screens/auth_screen.dart';
 import 'package:my_parking_app/presentation/screens/navigation_screen.dart';
 
 import 'package:my_parking_app/services/auth_service.dart';
+import 'package:my_parking_app/services/parking_service.dart';
 import 'package:my_parking_app/services/user_service.dart';
 import 'package:my_parking_app/utils/toast_utils.dart';
 
@@ -35,10 +37,21 @@ class MyApp extends StatelessWidget {
                 ..add(AppStarted()),
         ),
         BlocProvider<UserBloc>(create: (context) => UserBloc(UserService())),
-        BlocProvider<ParkingBloc>(create: (context) => ParkingBloc()),
+        BlocProvider<ParkingBloc>(
+          create: (context) => ParkingBloc(parkingService: ParkingService()),
+        ),
         BlocProvider<ParkingAreaBloc>(create: (context) => ParkingAreaBloc()),
         BlocProvider<ParkingBookingBloc>(
-          create: (context) => ParkingBookingBloc(),
+          create: (context) => ParkingBookingBloc(
+            authService: AuthService(),
+            parkingService: ParkingService(),
+          ),
+        ),
+        BlocProvider<GetBookingSlotBloc>(
+          create: (context) => GetBookingSlotBloc(
+            parkingService: ParkingService(),
+            authService: AuthService(),
+          ),
         ),
       ],
       child: MaterialApp(
@@ -49,7 +62,7 @@ class MyApp extends StatelessWidget {
             if (state is AuthError) {
               ToastUtils.showError(context, state.message);
             } else if (state is AuthAuthenticated) {
-              print("User authenticated: ${state.userId}");
+              ////print("User authenticated: ${state.userId}");
               context.read<UserBloc>().add(GetUserEvent(userId: state.userId));
             }
           },

@@ -32,9 +32,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isLoading = false;
   String _userId = "";
-  Future<void> _handleRefresh(BuildContext context, String userId) async {
-    BlocProvider.of<UserBloc>(context).add(GetUserEvent(userId: userId));
-  }
+  // Future<void> _handleRefresh(BuildContext context, String userId) async {
+  //   BlocProvider.of<UserBloc>(context).add(GetUserEvent(userId: userId));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -46,64 +46,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text("Profile"),
         centerTitle: true,
       ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          setState(() {
-            _userId = state is AuthAuthenticated ? state.userId : "";
-          });
-        },
-        child: RefreshIndicator(
-          onRefresh: () => _handleRefresh(context, _userId),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              children: [
-                Skeletonizer(
-                  enabled: isLoading,
-                  child: BlocListener<UserBloc, UserState>(
-                    listener: (context, state) {
-                      if (state is UserLoading) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                      } else {
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }
-                    },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          children: [
+            Skeletonizer(
+              enabled: isLoading,
+              child: BlocListener<UserBloc, UserState>(
+                listener: (context, state) {
+                  if (state is UserLoading) {
+                    setState(() {
+                      isLoading = true;
+                    });
+                  } else {
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
+                },
 
-                    child: ProfileHeader(),
-                  ),
-                ),
-                ProfileMenu(
-                  text: "My Account",
-                  icon: "assets/icons/User Icon.svg",
-                  press: () => {},
-                ),
-                ProfileMenu(
-                  text: "Notifications",
-                  icon: "assets/icons/Bell.svg",
-                  press: () {},
-                ),
-                ProfileMenu(
-                  text: "Settings",
-                  icon: "assets/icons/Settings.svg",
-                  press: () {},
-                ),
-                ProfileMenu(
-                  text: "Help Center",
-                  icon: "assets/icons/Question mark.svg",
-                  press: () {},
-                ),
-                ProfileMenu(
-                  text: "Log Out",
-                  icon: "assets/icons/Log out.svg",
-                  press: () => context.read<AuthBloc>().add(SignOutEvent()),
-                ),
-              ],
+                child: ProfileHeader(),
+              ),
             ),
-          ),
+            ProfileMenu(
+              text: "My Account",
+              icon: "assets/icons/User Icon.svg",
+              press: () => {},
+            ),
+            ProfileMenu(
+              text: "Notifications",
+              icon: "assets/icons/Bell.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Settings",
+              icon: "assets/icons/Settings.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Help Center",
+              icon: "assets/icons/Question mark.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Log Out",
+              icon: "assets/icons/Log out.svg",
+              press: () => context.read<AuthBloc>().add(SignOutEvent()),
+            ),
+          ],
         ),
       ),
     );

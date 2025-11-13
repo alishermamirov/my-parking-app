@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:my_parking_app/services/parking_service.dart';
 
-import '../../models/parking_model.dart';
 import 'parking_state.dart';
 
 part 'parking_event.dart';
 
 class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
-  final FirebaseDatabase database = FirebaseDatabase.instance;
+  final ParkingService parkingService;
   // StreamSubscription? _parkingSubscription;
 
-  ParkingBloc() : super(ParkingInitial()) {
+  ParkingBloc({required this.parkingService}) : super(ParkingInitial()) {
     on<GetParkingEvent>(_onGetParking);
     // on<ParkingUpdatedEvent>(_onParkingUpdated);
   }
@@ -24,22 +23,8 @@ class ParkingBloc extends Bloc<ParkingEvent, ParkingState> {
     emit(ParkingLoading());
 
     try {
-      final snapshot = await database.ref('parkings').get();
-
-      if (snapshot.exists && snapshot.value != null) {
-        final Map<dynamic, dynamic> rawData =
-            snapshot.value as Map<dynamic, dynamic>;
-
-        final List<ParkingModel> parkings = rawData.entries.map((entry) {
-          final key = entry.key.toString();
-          final value = Map<String, dynamic>.from(entry.value);
-          return ParkingModel.fromJson(value).copyWith(id: key);
-        }).toList();
-
-        emit(ParkingDone(parkings: parkings));
-      } else {
-        emit(ParkingDone(parkings: []));
-      }
+      final parkings = await parkingService.getParkings();
+      emit(ParkingDone(parkings: parkings));
     } catch (error) {
       emit(ParkingError(message: error.toString()));
     }

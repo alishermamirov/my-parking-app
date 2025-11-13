@@ -13,11 +13,11 @@ class GetParkingAreasEvent extends ParkingAreaEvent {
 }
 
 class ParkingAreasUpdatedEvent extends ParkingAreaEvent {
-  final List<ParkingAreaModel> areas;
-  const ParkingAreasUpdatedEvent(this.areas);
+  final ParkingAreaModel area;
+  const ParkingAreasUpdatedEvent(this.area);
 
   @override
-  List<Object?> get props => [areas];
+  List<Object?> get props => [area];
 }
 
 class ParkingAreaErrorEvent extends ParkingAreaEvent {

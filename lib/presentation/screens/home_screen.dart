@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("home build");
+    //print("home build");
 
     return RefreshIndicator(
       onRefresh: () => _handleRefresh(context),
@@ -106,7 +106,7 @@ class HomeScreen extends StatelessWidget {
                         final list = state.parkings.take(4).toList();
 
                         final parkingData = list;
-                        print(parkingData[0].id);
+                        //print(parkingData[0].id);
                         ;
                         return ListView.separated(
                           physics: NeverScrollableScrollPhysics(),
@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
           //             final parkingData = asyncSnapshot.data;
           //             return LayoutBuilder(
           //               builder: (context, constraints) {
-          //                 print(constraints.maxHeight);
+          //                 //print(constraints.maxHeight);
           //                 return parkingData != null
           //                     ? SizedBox(
           //                         height: constraints.maxHeight,

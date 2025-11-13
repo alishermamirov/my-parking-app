@@ -11,7 +11,7 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        print(state);
+        // print(state);
         final isLoading = state is UserLoading;
         return Skeletonizer(
           enabled: isLoading,

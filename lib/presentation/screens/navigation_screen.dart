@@ -20,7 +20,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   final _pages = const [
     HomeScreen(),
-    FavoritesScreen(),
+    // FavoritesScreen(),
     BookingSlotsScreen(),
     ProfileScreen(),
   ];
@@ -32,7 +32,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       BlocProvider.of<ParkingBloc>(context).add(GetParkingEvent());
     });
 
-    print("booking slots screen");
+    //print("booking slots screen");
   }
 
   @override
@@ -48,7 +48,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Widget _buildBottomNav() {
     final items = [
       {'icon': Icons.home, 'label': 'Home'},
-      {'icon': Icons.favorite, 'label': 'Favorites'},
+      // {'icon': Icons.favorite, 'label': 'Favorites'},
       {'icon': Icons.calendar_month, 'label': 'Bookings'},
       {'icon': Icons.person, 'label': 'Profile'},
     ];
