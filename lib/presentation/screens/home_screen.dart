@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_state.dart';
+import 'package:my_parking_app/presentation/screens/map_screen.dart';
 import 'package:my_parking_app/presentation/widgets/parking_item_tile.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -32,6 +33,9 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 16),
           GestureDetector(
             onTap: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => MapScreen()));
               // Navigator.of(context).pushNamed('/map');
             },
             child: Container(
