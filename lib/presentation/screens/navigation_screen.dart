@@ -10,7 +10,7 @@ import '../../theme/app_theme.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
-
+  static const routeName = "/navigation";
   @override
   State<NavigationScreen> createState() => _NavigationScreenState();
 }

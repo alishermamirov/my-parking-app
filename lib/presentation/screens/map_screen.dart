@@ -434,10 +434,11 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void dispose() {
     _searchCtrl.dispose();
+    _mapController.dispose();
     super.dispose();
   }
 
-  Future<void> _requestPermissionAndLocate() async {
+  Future<void> _requestPermissionAndLocate() async { if (!mounted) return;    
     bool enabled = await Geolocator.isLocationServiceEnabled();
     LocationPermission p = await Geolocator.checkPermission();
 
@@ -452,11 +453,13 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     final pos = await Geolocator.getCurrentPosition();
-
+  if (!mounted) return;
     animateCamera(pos.latitude, pos.longitude);
   }
 
   void animateCamera(double lat, double lng) {
+    if (!mounted) return; // <-- eng muhim joy
+    // if (_mapController == null) return;
     if (_mapReady) {
       _mapController.animateCamera(
         CameraUpdate.newLatLngZoom(LatLng(lat, lng), 15),

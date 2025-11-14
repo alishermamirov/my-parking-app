@@ -8,6 +8,7 @@ import 'package:my_parking_app/logic/parking_area_bloc/parking_area_bloc.dart';
 import 'package:my_parking_app/logic/parking_bloc/parking_bloc.dart';
 import 'package:my_parking_app/logic/parking_booking_bloc/parking_booking_bloc.dart';
 import 'package:my_parking_app/presentation/screens/auth_screen.dart';
+import 'package:my_parking_app/presentation/screens/booking_slots_screen.dart';
 import 'package:my_parking_app/presentation/screens/navigation_screen.dart';
 
 import 'package:my_parking_app/services/auth_service.dart';
@@ -76,10 +77,10 @@ class MyApp extends StatelessWidget {
         ),
 
         theme: AppTheme.theme,
-        // routes: {
-        //   RootScreen.routeName: (context) => const RootScreen(),
-        //   MapScreen.routeName: (context) => const MapScreen(),
-        // },
+        routes: {
+          NavigationScreen.routeName: (context) => NavigationScreen(),
+          BookingSlotsScreen.routeName: (context) => BookingSlotsScreen(),
+        },
         // initialRoute: '/',
       ),
     );

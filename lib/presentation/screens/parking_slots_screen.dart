@@ -127,11 +127,20 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
                                     state.message,
                                   );
                                   await Future.delayed(Duration(seconds: 1));
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BookingSlotsScreen(),
-                                    ),
+                                  // Navigator.of(context).pushReplacement(
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) =>
+                                  //         BookingSlotsScreen(),
+                                  //   ),
+                                  // )
+                                  // Navigator.of(context).pushReplacementNamed(
+                                  //   BookingSlotsScreen.routeName,
+                                  // );
+
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    BookingSlotsScreen.routeName,
+                                    (route) => false,
                                   );
                                 }
                                 if (state is ParkingBookingError) {
@@ -198,7 +207,8 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
                                       userId: "",
                                       parkingId: widget.parking.id,
                                       slotId: slot.id,
-                                      timestamp: DateTime.now().toIso8601String(),
+                                      timestamp: DateTime.now()
+                                          .toIso8601String(),
                                       index: selectedindex,
                                       parkingModel: widget.parking,
                                       slotName: slot.name,
