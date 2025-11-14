@@ -5,19 +5,15 @@ import 'package:my_parking_app/presentation/screens/parking_slots_screen.dart';
 import '../../models/parking_model.dart';
 
 class ParkingItemTile extends StatelessWidget {
-  // final ParkingSpot? spot;
-  final bool isMap;
   final double maxHeight;
   final bool? isSelected;
   final ParkingModel? data;
-  ParkingItemTile({
-    Key? key,
+  const ParkingItemTile({
+    super.key,
     required this.maxHeight,
-    // this.spot,
-    this.isMap = false,
     this.isSelected,
     this.data,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -103,26 +99,6 @@ class ParkingItemTile extends StatelessWidget {
                       // ),
                     ],
                   ),
-                  isMap
-                      ? InkWell(
-                          onTap: () {
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         SpotDetailScreen(),
-                            //   ),
-                            // );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 244, 244, 244),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.navigate_next_outlined),
-                          ),
-                        )
-                      : SizedBox(),
                 ],
               ),
             ),
